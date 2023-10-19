@@ -8,14 +8,29 @@ import {
   setStreet,
   setCity,
   setZipCode,
+  setState,
+  setDepartment 
 } from '../../state/employeeSlice';
 import DateField from '../../components/molecules/DateField';
+import TextField from '../../components/atoms/TextField';
+import SelectField from '../../components/atoms/SelectField'; 
+import AddressFieldset from '../../components/organisms/AddressFieldset';
 import './CreateEmployee.css';
-
 
 const CreateEmployee = () => {
   const dispatch = useDispatch();
-  const { firstName, lastName, birthDate, startDate, street, city, zipCode } = useSelector(state => state.employee);
+  const { 
+    firstName, 
+    lastName, 
+    birthDate, 
+    startDate, 
+    street, 
+    city, 
+    state, 
+    zipCode,
+    department, 
+    departmentOptions 
+  } = useSelector(state => state.employee);
 
   const handleTextChange = (setter) => (e) => {
     dispatch(setter(e.target.value));
@@ -25,90 +40,47 @@ const CreateEmployee = () => {
     dispatch(setter(date));
   };
 
+  const handleAddressChange = (field) => (e) => {
+    switch (field) {
+      case 'street':
+        dispatch(setStreet(e.target.value));
+        break;
+      case 'city':
+        dispatch(setCity(e.target.value));
+        break;
+      case 'zipCode':
+        dispatch(setZipCode(e.target.value));
+        break;
+      case 'state':
+        dispatch(setState(e.target.value));
+        break;
+      default:
+        break;
+    }
+  };
+
+  const handleSelectChange = (setter) => (option) => {
+    dispatch(setter(option ? option.value : ''));
+  };
+
   return (
     <div className="form-container">
       <h2 className="form-title">Create Employee</h2>
       <form id="create-employee">
-
-        <div className="form-field">
-          <div className="form-field-wrapper">
-            <label htmlFor="firstName">First Name</label>
-            <input
-              type="text"
-              id="firstName"
-              value={firstName}
-              onChange={handleTextChange(setFirstName)}
-            />
-          </div>
-        </div>
-
-        <div className="form-field">
-          <div className="form-field-wrapper">
-            <label htmlFor="lastName">Last Name</label>
-            <input
-              type="text"
-              id="lastName"
-              value={lastName}
-              onChange={handleTextChange(setLastName)}
-            />
-          </div>
-        </div>
-
-        <DateField
-          label="Date of Birth"
-          id="birthDate"
-          value={birthDate}
-          onChange={handleDateChange(setBirthDate)}
+        <TextField label="First Name" id="firstName" value={firstName} onChange={handleTextChange(setFirstName)} />
+        <TextField label="Last Name" id="lastName" value={lastName} onChange={handleTextChange(setLastName)} />
+        <DateField label="Date of Birth" id="birthDate" value={birthDate} onChange={handleDateChange(setBirthDate)} />
+        <DateField label="Start Date" id="startDate" value={startDate} onChange={handleDateChange(setStartDate)} />
+        <AddressFieldset street={street} city={city} state={state} zipCode={zipCode} onChange={handleAddressChange} />
+        <div className="department-select-container">
+        <SelectField 
+          label="Department"
+          id="department"
+          options={departmentOptions}
+          value={department}
+          onChange={handleSelectChange(setDepartment)}
         />
-
-        <DateField
-          label="Start Date"
-          id="startDate"
-          value={startDate}
-          onChange={handleDateChange(setStartDate)}
-        />
-        <fieldset className="address">
-          <legend>Address</legend>
-
-          <div className="form-field">
-            <div className="form-field-wrapper">
-              <label htmlFor="street">Street</label>
-              <input
-                type="text"
-                id="street"
-                value={street}
-                onChange={handleTextChange(setStreet)}
-              />
-            </div>
-          </div>
-
-          <div className="form-field">
-            <div className="form-field-wrapper">
-              <label htmlFor="city">City</label>
-              <input
-                type="text"
-                id="city"
-                value={city}
-                onChange={handleTextChange(setCity)}
-              />
-            </div>
-          </div>
-
-          <div className="form-field">
-            <div className="form-field-wrapper">
-              <label htmlFor="zipCode">Zip Code</label>
-              <input
-                type="text"
-                id="zipCode"
-                value={zipCode}
-                onChange={handleTextChange(setZipCode)}
-              />
-            </div>
-          </div>
-
-        </fieldset>
-      
-
+        </div>
       </form>
     </div>
   );
