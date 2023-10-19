@@ -1,0 +1,13 @@
+.header {
+    background: transparent;
+    text-align: center;
+    width: 100%;
+  }
+  
+  .header-title {
+    color: white;
+    margin: 0;
+    padding: 20px;
+    font-size: 70px;
+  }
+  
