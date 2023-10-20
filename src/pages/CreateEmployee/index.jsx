@@ -29,7 +29,8 @@ const CreateEmployee = () => {
     state, 
     zipCode,
     department, 
-    departmentOptions 
+    departmentOptions, 
+
   } = useSelector(state => state.employee);
 
   const handleTextChange = (setter) => (e) => {
@@ -52,12 +53,13 @@ const CreateEmployee = () => {
         dispatch(setZipCode(e.target.value));
         break;
       case 'state':
-        dispatch(setState(e.target.value));
+        dispatch(setState(e));  
         break;
       default:
         break;
     }
   };
+  
 
   const handleSelectChange = (setter) => (option) => {
     dispatch(setter(option ? option.value : ''));
@@ -73,13 +75,14 @@ const CreateEmployee = () => {
         <DateField label="Start Date" id="startDate" value={startDate} onChange={handleDateChange(setStartDate)} />
         <AddressFieldset street={street} city={city} state={state} zipCode={zipCode} onChange={handleAddressChange} />
         <div className="department-select-container">
-        <SelectField 
-          label="Department"
-          id="department"
-          options={departmentOptions}
-          value={department}
-          onChange={handleSelectChange(setDepartment)}
-        />
+       <SelectField 
+  label="Department"
+  id="department"
+  options={departmentOptions}
+  value={department}
+  onChange={handleSelectChange(setDepartment)}
+/>
+
         </div>
       </form>
     </div>

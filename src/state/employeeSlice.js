@@ -13,7 +13,7 @@ const initialState = {
   zipCode: '',
   department: '',
   stateOptions: states.map(s => ({ value: s.abbreviation, label: s.name })),
-  departmentOptions: departments.map(d => ({ value: d.abbreviation, label: d.name })), 
+  departmentOptions: departments.map(d => ({ value: d.abbreviation, label: d.name })),  
 };
 
 const employeeSlice = createSlice({

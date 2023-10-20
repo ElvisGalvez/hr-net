@@ -1,10 +1,13 @@
-.custom-select__control,
-.custom-select__control--is-focused,
-.custom-select__control:hover {
-  border: 2px solid #007bff ;
-  box-shadow: none ;
+
+.select-field-container {
+  padding-bottom: 22px;
+  
 }
 
-.select-field-container{
-    padding-bottom: 22px;
+.select-field-container .custom-select__control {
+  border: 2px solid #007bff;
+}
+.select-field-container .custom-select__control--is-focused,
+.select-field-container .custom-select__control:hover {
+  border: 2px solid #007bff;
 }

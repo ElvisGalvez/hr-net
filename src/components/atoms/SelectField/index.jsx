@@ -11,7 +11,13 @@ const SelectField = ({ label, id, options, value, onChange }) => {
         id={id}
         options={options}
         value={options.find(option => option.value === value)}
-        onChange={onChange}
+        onChange={(option) => {
+          if (option) {
+            onChange(option.value);
+          } else {
+            onChange('');
+          }
+        }}
         className="custom-select"
         classNamePrefix="custom-select"
       />

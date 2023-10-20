@@ -12,12 +12,12 @@ const AddressFieldset = ({ street, city, state, zipCode, onChange }) => (
     <TextField label="City" id="city" value={city} onChange={onChange('city')} />
     
     <SelectField
-      label="State"
-      id="state"
-      options={states.map((s) => ({ value: s.abbreviation, label: s.name }))}
-      value={state}
-      onChange={onChange('state')}
-    />
+  label="State"
+  id="state"
+  options={states.map((s) => ({ value: s.abbreviation, label: s.name }))}
+  value={state}
+  onChange={onChange('state')}
+/>
     
     <TextField label="Zip Code" id="zipCode" value={zipCode} onChange={onChange('zipCode')} />
   </fieldset>
