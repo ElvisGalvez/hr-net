@@ -9,13 +9,15 @@ import {
   setCity,
   setZipCode,
   setState,
-  setDepartment 
+  setDepartment,
+  createEmployee 
 } from '../../state/employeeSlice';
 import DateField from '../../components/molecules/DateField';
 import TextField from '../../components/atoms/TextField';
 import SelectField from '../../components/atoms/SelectField'; 
 import AddressFieldset from '../../components/organisms/AddressFieldset';
 import './CreateEmployee.css';
+import SaveButton from '../../components/atoms/SaveButton';
 
 const CreateEmployee = () => {
   const dispatch = useDispatch();
@@ -30,8 +32,11 @@ const CreateEmployee = () => {
     zipCode,
     department, 
     departmentOptions, 
-
   } = useSelector(state => state.employee);
+
+  const handleSubmit = () => {
+    dispatch(createEmployee());  
+  };
 
   const handleTextChange = (setter) => (e) => {
     dispatch(setter(e.target.value));
@@ -75,15 +80,15 @@ const CreateEmployee = () => {
         <DateField label="Start Date" id="startDate" value={startDate} onChange={handleDateChange(setStartDate)} />
         <AddressFieldset street={street} city={city} state={state} zipCode={zipCode} onChange={handleAddressChange} />
         <div className="department-select-container">
-       <SelectField 
-  label="Department"
-  id="department"
-  options={departmentOptions}
-  value={department}
-  onChange={handleSelectChange(setDepartment)}
-/>
-
+          <SelectField 
+            label="Department"
+            id="department"
+            options={departmentOptions}
+            value={department}
+            onChange={handleSelectChange(setDepartment)}
+          />
         </div>
+        <SaveButton label="Save" onClick={handleSubmit} /> 
       </form>
     </div>
   );

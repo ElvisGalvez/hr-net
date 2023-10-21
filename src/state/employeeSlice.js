@@ -13,7 +13,9 @@ const initialState = {
   zipCode: '',
   department: '',
   stateOptions: states.map(s => ({ value: s.abbreviation, label: s.name })),
-  departmentOptions: departments.map(d => ({ value: d.abbreviation, label: d.name })),  
+  departmentOptions: departments.map(d => ({ value: d.abbreviation, label: d.name })),
+  employees: [],  
+  isSideMenuExpanded: true,
 };
 
 const employeeSlice = createSlice({
@@ -45,11 +47,31 @@ const employeeSlice = createSlice({
       state.state = action.payload;
     },
     setDepartment: (state, action) => {
-        state.department = action.payload;
-      }, 
+      state.department = action.payload;
+    },
+    toggleSideMenu: (state) => {
+      state.isSideMenuExpanded = !state.isSideMenuExpanded;
+    },
+    setSideMenuExpanded: (state, action) => {
+      state.isSideMenuExpanded = action.payload;
+    },
+    createEmployee: (state) => {
+      const newEmployee = {
+        firstName: state.firstName,
+        lastName: state.lastName,
+        birthDate: state.birthDate,
+        startDate: state.startDate,
+        street: state.street,
+        city: state.city,
+        state: state.state,
+        zipCode: state.zipCode,
+        department: state.department,
+      };
+      state.employees.push(newEmployee);
+    },
   },
 });
 
-export const { setFirstName, setLastName, setBirthDate, setStartDate, setStreet, setCity, setZipCode, setState, setDepartment } = employeeSlice.actions;
+export const { setFirstName, setLastName, setBirthDate, setStartDate, setStreet, setCity, setZipCode, setState, setDepartment, createEmployee, toggleSideMenu, setSideMenuExpanded, } = employeeSlice.actions;
 
 export default employeeSlice.reducer;
