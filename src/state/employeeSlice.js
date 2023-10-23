@@ -15,7 +15,7 @@ const initialState = {
   stateOptions: states.map(s => ({ value: s.abbreviation, label: s.name })),
   departmentOptions: departments.map(d => ({ value: d.abbreviation, label: d.name })),
   employees: [],  
-  isSideMenuExpanded: true,
+  isSideMenuExpanded: false,
 };
 
 const employeeSlice = createSlice({
