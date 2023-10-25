@@ -10,14 +10,13 @@ const AddressFieldset = ({ street, city, state, zipCode, onChange }) => (
     <legend>Address</legend>
     <TextField label="Street" id="street" value={street} onChange={onChange('street')} />
     <TextField label="City" id="city" value={city} onChange={onChange('city')} />
-    
     <SelectField
-  label="State"
-  id="state"
-  options={states.map((s) => ({ value: s.abbreviation, label: s.name }))}
-  value={state}
-  onChange={onChange('state')}
-/>
+    label="State"
+    id="state"
+    options={states.map((s) => ({ value: s.abbreviation, label: s.name }))}
+    value={state}
+    onChange={(selectedOption) => onChange('state')(selectedOption ? selectedOption.value : null)}
+  />
     
     <TextField label="Zip Code" id="zipCode" value={zipCode} onChange={onChange('zipCode')} />
   </fieldset>

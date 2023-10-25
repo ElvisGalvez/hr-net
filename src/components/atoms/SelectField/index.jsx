@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Select from 'react-select';
+import Select from 'react-select';  
 import './SelectField.css';
 
 const SelectField = ({ label, id, options, value, onChange }) => {
@@ -13,7 +13,7 @@ const SelectField = ({ label, id, options, value, onChange }) => {
         value={options.find(option => option.value === value)}
         onChange={(option) => {
           if (option) {
-            onChange(option.value);
+            onChange(option);
           } else {
             onChange('');
           }

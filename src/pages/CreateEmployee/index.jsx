@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   setFirstName,
@@ -16,10 +16,13 @@ import DateField from '../../components/molecules/DateField';
 import TextField from '../../components/atoms/TextField';
 import SelectField from '../../components/atoms/SelectField'; 
 import AddressFieldset from '../../components/organisms/AddressFieldset';
-import './CreateEmployee.css';
 import SaveButton from '../../components/atoms/SaveButton';
+import ModalCraft from '../../components/atoms/ConfirmationModal';
+import ModalContent from '../../components/molecules/ModalContent';
+import './CreateEmployee.css';
 
 const CreateEmployee = () => {
+  const [modalOpen, setModalOpen] = useState(false); 
   const dispatch = useDispatch();
   const { 
     firstName, 
@@ -34,31 +37,67 @@ const CreateEmployee = () => {
     departmentOptions, 
   } = useSelector(state => state.employee);
 
-  const handleSubmit = () => {
-    dispatch(createEmployee());  
-  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-  const handleTextChange = (setter) => (e) => {
-    dispatch(setter(e.target.value));
-  };
+  if (
+    firstName &&
+    lastName &&
+    birthDate &&
+    startDate &&
+    street &&
+    city &&
+    state &&
+    zipCode &&
+    department
+  ) {
+    setModalOpen(true);
+  } else {
+    alert('Tous les champs doivent être remplis.');
+  }
+};
 
-  const handleDateChange = (setter) => (date) => {
-    dispatch(setter(date));
+  
+  
+const handleConfirm = () => {
+  dispatch(createEmployee());
+  setModalOpen(false); 
+};
+
+const handleCancel = () => {
+  setModalOpen(false); 
+};
+
+const handleTextChange = (setter) => (e) => {
+  dispatch(setter(e.target.value));
+};
+
+const handleDateChange = (setter) => (date) => {
+    const isoString = date.toISOString();
+    dispatch(setter(isoString));
   };
+  
 
   const handleAddressChange = (field) => (e) => {
+    let value;
+    if (e && e.target) {
+      value = e.target.value;
+    } else {
+      value = e;
+    }
+  
     switch (field) {
       case 'street':
-        dispatch(setStreet(e.target.value));
+        dispatch(setStreet(value));
         break;
       case 'city':
-        dispatch(setCity(e.target.value));
+        dispatch(setCity(value));
         break;
       case 'zipCode':
-        dispatch(setZipCode(e.target.value));
+        dispatch(setZipCode(value));
         break;
       case 'state':
-        dispatch(setState(e));  
+        dispatch(setState(value));
         break;
       default:
         break;
@@ -67,9 +106,13 @@ const CreateEmployee = () => {
   
 
   const handleSelectChange = (setter) => (option) => {
-    dispatch(setter(option ? option.value : ''));
+    if (option) {
+      dispatch(setter(option.value));
+    } else {
+      dispatch(setter(''));
+    }
   };
-
+  
   return (
     <div className="form-container">
       <h2 className="form-title">Create Employee</h2>
@@ -88,8 +131,15 @@ const CreateEmployee = () => {
             onChange={handleSelectChange(setDepartment)}
           />
         </div>
-        <SaveButton label="Save" onClick={handleSubmit} /> 
+        <SaveButton label="Save" onClick={handleSubmit} />
       </form>
+      <ModalCraft isOpen={modalOpen} onClose={handleCancel}>
+        <ModalContent 
+          data={{ firstName, lastName, birthDate, startDate, street, city, state, zipCode, department }}
+          onConfirm={handleConfirm}
+          onCancel={handleCancel}
+        />
+      </ModalCraft>
     </div>
   );
 };

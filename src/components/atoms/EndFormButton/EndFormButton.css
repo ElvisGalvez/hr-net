@@ -1,0 +1,13 @@
+.generic-button {
+  font-size: medium;
+  border-radius: 5px;  
+  margin: 5px;  
+}
+
+.confirm {
+  background-color: rgb(20, 202, 20);
+}
+
+.cancel {
+  background-color: rgb(255, 0, 0);
+}

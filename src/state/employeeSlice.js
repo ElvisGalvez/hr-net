@@ -16,6 +16,7 @@ const initialState = {
   departmentOptions: departments.map(d => ({ value: d.abbreviation, label: d.name })),
   employees: [],  
   isSideMenuExpanded: false,
+  isModalOpen: false,
 };
 
 const employeeSlice = createSlice({
@@ -54,6 +55,12 @@ const employeeSlice = createSlice({
     },
     setSideMenuExpanded: (state, action) => {
       state.isSideMenuExpanded = action.payload;
+    },
+    openModal: (state) => {
+      state.isModalOpen = true;
+    },
+    closeModal: (state) => {
+      state.isModalOpen = false;
     },
     createEmployee: (state) => {
       const newEmployee = {
