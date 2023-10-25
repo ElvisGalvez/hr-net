@@ -1,11 +1,11 @@
 import React from 'react';
 import './SideMenuLink.css';
+import { Link } from 'react-router-dom';
 
-const SideMenuLink = ({ href, iconClass, text, isExpanded }) => (
-  <a href={href} className="menu-link">
+const SideMenuLink = ({ to, iconClass, text, isExpanded }) => (
+  <Link to={to} className="menu-link">
     <i className={iconClass}></i>
     <span className={`menu-text ${isExpanded ? 'show-text' : 'hide-text'}`}>{text}</span>
-  </a>
+  </Link>
 );
-
 export default SideMenuLink;
