@@ -52,6 +52,11 @@ const EmployeeTable = ({ data }) => {
             header: 'Zip Code',
             cell: info => info.getValue(),
         }),
+        
+        columnHelper.accessor('edit', {
+            header: 'Edit',
+            cell: info => <i className="fa-solid fa-pen-to-square" onClick={() => handleEditClick(info.row)}></i>,
+        }),
     ];
 
     const table = useReactTable({
@@ -59,6 +64,10 @@ const EmployeeTable = ({ data }) => {
         columns,
         getCoreRowModel: getCoreRowModel(),
     });
+
+    const handleEditClick = (row) => {
+        // Ouvrir la future modale pour édition ici et passer 'row.original' pour préremplir les champs
+    };
 
     return (
         <table className="table">
