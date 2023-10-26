@@ -1,0 +1,27 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .table {
+    border-collapse: collapse;
+    background-color: white;
+    color: gray;
+  }
+  
+  .table-header {
+    border-bottom: 1px solid gray;
+  }
+  
+  .table-cell,
+  .table-header-cell {
+    padding: 10px;
+    text-align: left;
+  }
+  
+  .table-row {
+    border-bottom: 1px solid lightgray;
+  }
+  

@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
-import states from '../data/states.json';  
-import departments from '../data/departments.json';  
+import states from '../data/states.json';
+import departments from '../data/departments.json';
 
 const initialState = {
   firstName: '',
@@ -14,7 +14,7 @@ const initialState = {
   department: '',
   stateOptions: states.map(s => ({ value: s.abbreviation, label: s.name })),
   departmentOptions: departments.map(d => ({ value: d.abbreviation, label: d.name })),
-  employees: [],  
+  employees: [],
   isSideMenuExpanded: false,
   isModalOpen: false,
 };
@@ -62,7 +62,8 @@ const employeeSlice = createSlice({
     closeModal: (state) => {
       state.isModalOpen = false;
     },
-    createEmployee: (state) => {
+    createEmployee: (state, action) => {
+      console.log("Reducer called for createEmployee");
       const newEmployee = {
         firstName: state.firstName,
         lastName: state.lastName,
@@ -75,10 +76,14 @@ const employeeSlice = createSlice({
         department: state.department,
       };
       state.employees.push(newEmployee);
+      localStorage.setItem('employees', JSON.stringify(state.employees));
+    },
+    loadFromLocalStorage: (state, action) => {
+      state.employees = action.payload;
     },
   },
 });
 
-export const { setFirstName, setLastName, setBirthDate, setStartDate, setStreet, setCity, setZipCode, setState, setDepartment, createEmployee, toggleSideMenu, setSideMenuExpanded, } = employeeSlice.actions;
+export const { setFirstName, setLastName, setBirthDate, setStartDate, setStreet, setCity, setZipCode, setState, setDepartment, createEmployee, toggleSideMenu, setSideMenuExpanded, loadFromLocalStorage } = employeeSlice.actions;
 
 export default employeeSlice.reducer;

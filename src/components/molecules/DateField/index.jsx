@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import './DateField.css';
 
 const DateField = ({ label, id, onChange, value }) => {
-  
+
   const handleDateChange = (date) => {
     if (!date || isValid(date)) {
       onChange(date);

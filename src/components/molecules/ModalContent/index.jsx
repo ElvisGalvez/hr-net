@@ -4,7 +4,7 @@ import './ModalContent.css';
 import { format, parseISO, isValid } from 'date-fns';
 
 const ModalContent = ({ data, onConfirm, onCancel }) => {
-  
+
   const formatDate = (isoString) => {
     if (isValid(parseISO(isoString))) {
       return format(parseISO(isoString), 'yyyy-MM-dd');
