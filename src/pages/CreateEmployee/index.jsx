@@ -57,6 +57,8 @@ const CreateEmployee = () => {
       value = e.target.value;
     } else if (e && e instanceof Date) {
       value = e.toISOString();
+    } else if (e && e.value) {
+      value = e.value;
     } else {
       value = e;
     }
@@ -77,7 +79,6 @@ const CreateEmployee = () => {
       dispatch(actionMap[field](value));
     }
   };
-
   return (
     <>
       <EmployeeForm 
