@@ -62,9 +62,7 @@ const employeeSlice = createSlice({
     closeModal: (state) => {
       state.isModalOpen = false;
     },
-    
     createEmployee: (state, action) => {
-      console.log("Reducer called for createEmployee");
       const newEmployee = {
         firstName: state.firstName,
         lastName: state.lastName,
@@ -76,9 +74,7 @@ const employeeSlice = createSlice({
         zipCode: state.zipCode,
         department: state.department,
       };
-      
       state.employees.push(newEmployee);
-      localStorage.setItem('employees', JSON.stringify(state.employees));
     },
     loadFromLocalStorage: (state, action) => {
       state.employees = action.payload;
