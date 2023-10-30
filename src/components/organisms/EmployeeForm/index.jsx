@@ -10,6 +10,7 @@ import {
   setZipCode,
   setState,
   setDepartment,
+  setFormError,  
 } from '../../../state/employeeSlice';
 import DateField from '../../molecules/DateField';
 import TextField from '../../atoms/TextField';
@@ -20,19 +21,20 @@ import ModalCraft from '../../atoms/ConfirmationModal';
 import ModalContent from '../../molecules/ModalContent';
 import './EmployeeForm.css';
 
-
 const EmployeeForm = ({ title, departmentOptions, handleConfirm }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const dispatch = useDispatch();
   const formData = useSelector(state => state.employee);
+  const formError = useSelector(state => state.employee.formError); 
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const { firstName, lastName, birthDate, startDate, street, city, state, zipCode, department } = formData;
     if (firstName && lastName && birthDate && startDate && street && city && state && zipCode && department) {
       setModalOpen(true);
+      dispatch(setFormError(''));  
     } else {
-      alert('Tous les champs doivent être remplis.');
+      dispatch(setFormError('Tous les champs doivent être remplis.'));  
     }
   };
 
@@ -89,6 +91,7 @@ const EmployeeForm = ({ title, departmentOptions, handleConfirm }) => {
         </div>
         <SaveButton label="Save" onClick={handleSubmit} />
       </form>
+      {formError && <p className="form-error">{formError}</p>}
       <ModalCraft isOpen={modalOpen} onClose={handleCancel}>
         <ModalContent 
           data={formData}

@@ -17,6 +17,7 @@ const initialState = {
   employees: [],
   isSideMenuExpanded: false,
   isModalOpen: false,
+  formError: '',
 };
 
 const employeeSlice = createSlice({
@@ -79,9 +80,12 @@ const employeeSlice = createSlice({
     loadFromLocalStorage: (state, action) => {
       state.employees = action.payload;
     },
+    setFormError: (state, action) => {
+      state.formError = action.payload;
+    },
   },
 });
 
-export const { setFirstName, setLastName, setBirthDate, setStartDate, setStreet, setCity, setZipCode, setState, setDepartment, createEmployee, toggleSideMenu, setSideMenuExpanded, loadFromLocalStorage } = employeeSlice.actions;
+export const { setFirstName, setLastName, setBirthDate, setStartDate, setStreet, setCity, setZipCode, setState, setDepartment, setFormError, createEmployee, toggleSideMenu, setSideMenuExpanded, loadFromLocalStorage } = employeeSlice.actions;
 
 export default employeeSlice.reducer;

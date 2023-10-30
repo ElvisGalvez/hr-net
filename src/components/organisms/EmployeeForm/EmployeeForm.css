@@ -67,10 +67,7 @@
     width: 100%;
   }
   
-  .error-message {
-    display: none;
+  .form-error {
     color: red;
-    font-size: 16px;
-    margin-bottom: 20px;
+    font-weight: bold;
   }
-  
