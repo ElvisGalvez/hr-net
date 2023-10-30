@@ -71,3 +71,13 @@
     color: red;
     font-weight: bold;
   }
+
+  .field-error {
+    color: red;
+    font-size: 12px;
+    margin-top: -10px;
+    margin-bottom: 10px;
+    max-width: 209px;
+  }
+
+  
