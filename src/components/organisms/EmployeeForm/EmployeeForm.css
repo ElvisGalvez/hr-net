@@ -74,10 +74,11 @@
 
   .field-error {
     color: red;
-    font-size: 12px;
-    margin-top: -10px;
+    font-size: 13px;
+    margin-top: -22px;
     margin-bottom: 10px;
     max-width: 209px;
+    font-weight: 550;
   }
 
   

@@ -38,15 +38,26 @@ const validateAge = (birthDate) => {
   return age;
 };
 
+const validateUSZipCode = (zipCode) => {
+  const zipCodePattern = /^[0-9]{5}(?:-[0-9]{4})?$/;
+  return zipCodePattern.test(zipCode);
+};
+
+const validateCity = (city) => {
+  const forbiddenCharacters = [',', ';', ':', '!', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+  return !forbiddenCharacters.some(char => city.includes(char));
+};
+
 const EmployeeForm = ({ title, departmentOptions, handleConfirm }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const dispatch = useDispatch();
   const formData = useSelector(state => state.employee);
   const formError = useSelector(state => state.employee.formError);
   const [birthDateError, setBirthDateError] = useState('');
-
   const [firstNameError, setFirstNameError] = useState('');
   const [lastNameError, setLastNameError] = useState('');
+  const [zipCodeError, setZipCodeError] = useState('');
+  const [cityError, setCityError] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -55,24 +66,38 @@ const EmployeeForm = ({ title, departmentOptions, handleConfirm }) => {
     let isValid = true;
 
     if (!validateName(firstName)) {
-      setFirstNameError('First name should not contain forbidden characters or numbers.');
+      setFirstNameError('First name should not contain forbidden characters or numbers');
       isValid = false;
     } else {
       setFirstNameError('');
     }
 
     if (!validateName(lastName)) {
-      setLastNameError('Last name should not contain forbidden characters or numbers.');
+      setLastNameError('Last name should not contain forbidden characters or numbers');
       isValid = false;
     } else {
       setLastNameError('');
     }
 
     if (validateAge(birthDate) < 18) {
-      setBirthDateError('The employee must be of legal age.');
+      setBirthDateError('The employee must be of legal age');
       isValid = false;
     } else {
       setBirthDateError('');
+    }
+
+    if (!validateUSZipCode(formData.zipCode)) {
+      setZipCodeError('Invalid ZIP code');
+      isValid = false;
+    } else {
+      setZipCodeError('');
+    }
+
+    if (!validateCity(formData.city)) {
+      setCityError('City should not contain forbidden characters or numbers');
+      isValid = false;
+    } else {
+      setCityError('');
     }
 
     if (!isValid) {
@@ -83,7 +108,7 @@ const EmployeeForm = ({ title, departmentOptions, handleConfirm }) => {
       setModalOpen(true);
       dispatch(setFormError(''));
     } else {
-      dispatch(setFormError('All fields must be filled.'));
+      dispatch(setFormError('All fields must be filled'));
     }
   };
 
@@ -131,7 +156,15 @@ const EmployeeForm = ({ title, departmentOptions, handleConfirm }) => {
         <DateField label="Date of Birth" id="birthDate" value={formData.birthDate} onChange={handleChange('birthDate')} />
         {birthDateError && <p className="field-error">{birthDateError}</p>}
         <DateField label="Start Date" id="startDate" value={formData.startDate} onChange={handleChange('startDate')} />
-        <AddressFieldset street={formData.street} city={formData.city} state={formData.state} zipCode={formData.zipCode} onChange={handleChange} />
+        <AddressFieldset 
+          street={formData.street} 
+          city={formData.city} 
+          state={formData.state} 
+          zipCode={formData.zipCode} 
+          onChange={handleChange}
+          cityError={cityError}
+          zipCodeError={zipCodeError}
+        />
         <div className="department-select-container">
           <SelectField
             label="Department"
