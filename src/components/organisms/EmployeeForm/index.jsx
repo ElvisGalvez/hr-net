@@ -10,7 +10,7 @@ import {
   setZipCode,
   setState,
   setDepartment,
-  setFormError,  
+  setFormError,
 } from '../../../state/employeeSlice';
 import DateField from '../../molecules/DateField';
 import TextField from '../../atoms/TextField';
@@ -26,47 +26,67 @@ const validateName = (name) => {
   return !forbiddenCharacters.some(char => name.includes(char));
 };
 
+const validateAge = (birthDate) => {
+  const today = new Date();
+  const birthDateObject = new Date(birthDate);
+  const age = today.getFullYear() - birthDateObject.getFullYear();
+  const monthDifference = today.getMonth() - birthDateObject.getMonth();
+
+  if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDateObject.getDate())) {
+    return age - 1;
+  }
+  return age;
+};
+
 const EmployeeForm = ({ title, departmentOptions, handleConfirm }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const dispatch = useDispatch();
   const formData = useSelector(state => state.employee);
-  const formError = useSelector(state => state.employee.formError); 
+  const formError = useSelector(state => state.employee.formError);
+  const [birthDateError, setBirthDateError] = useState('');
 
-  const [firstNameError, setFirstNameError] = useState(''); 
-  const [lastNameError, setLastNameError] = useState('');  
+  const [firstNameError, setFirstNameError] = useState('');
+  const [lastNameError, setLastNameError] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const { firstName, lastName, birthDate, startDate, street, city, state, zipCode, department } = formData;
-  
+
     let isValid = true;
-  
+
     if (!validateName(firstName)) {
       setFirstNameError('First name should not contain forbidden characters or numbers.');
       isValid = false;
     } else {
       setFirstNameError('');
     }
-  
+
     if (!validateName(lastName)) {
       setLastNameError('Last name should not contain forbidden characters or numbers.');
       isValid = false;
     } else {
       setLastNameError('');
     }
-  
+
+    if (validateAge(birthDate) < 18) {
+      setBirthDateError('The employee must be of legal age.');
+      isValid = false;
+    } else {
+      setBirthDateError('');
+    }
+
     if (!isValid) {
       return;
     }
-  
+
     if (firstName && lastName && birthDate && startDate && street && city && state && zipCode && department) {
       setModalOpen(true);
-      dispatch(setFormError(''));  
+      dispatch(setFormError(''));
     } else {
-      dispatch(setFormError('Tous les champs doivent être remplis.'));  
+      dispatch(setFormError('All fields must be filled.'));
     }
   };
-  
+
   const handleCancel = () => {
     setModalOpen(false);
   };
@@ -105,14 +125,15 @@ const EmployeeForm = ({ title, departmentOptions, handleConfirm }) => {
       <h2 className="form-title">{title}</h2>
       <form id="employee-form" onSubmit={handleSubmit}>
         <TextField label="First Name" id="firstName" value={formData.firstName} onChange={handleChange('firstName')} />
-        {firstNameError && <p className="field-error">{firstNameError}</p>} 
+        {firstNameError && <p className="field-error">{firstNameError}</p>}
         <TextField label="Last Name" id="lastName" value={formData.lastName} onChange={handleChange('lastName')} />
-        {lastNameError && <p className="field-error">{lastNameError}</p>}  
+        {lastNameError && <p className="field-error">{lastNameError}</p>}
         <DateField label="Date of Birth" id="birthDate" value={formData.birthDate} onChange={handleChange('birthDate')} />
+        {birthDateError && <p className="field-error">{birthDateError}</p>}
         <DateField label="Start Date" id="startDate" value={formData.startDate} onChange={handleChange('startDate')} />
         <AddressFieldset street={formData.street} city={formData.city} state={formData.state} zipCode={formData.zipCode} onChange={handleChange} />
         <div className="department-select-container">
-          <SelectField 
+          <SelectField
             label="Department"
             id="department"
             options={departmentOptions}
@@ -124,7 +145,7 @@ const EmployeeForm = ({ title, departmentOptions, handleConfirm }) => {
       </form>
       {formError && <p className="form-error">{formError}</p>}
       <ModalCraft isOpen={modalOpen} onClose={handleCancel}>
-        <ModalContent 
+        <ModalContent
           data={formData}
           onConfirm={() => { handleConfirm(); setModalOpen(false); }}
           onCancel={handleCancel}
