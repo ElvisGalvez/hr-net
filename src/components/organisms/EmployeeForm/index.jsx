@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   setFirstName,
@@ -11,6 +11,12 @@ import {
   setState,
   setDepartment,
   setFormError,
+  setModalOpen,
+  setBirthDateError,
+  setFirstNameError,
+  setLastNameError,
+  setZipCodeError,
+  setCityError,
 } from '../../../state/employeeSlice';
 import DateField from '../../molecules/DateField';
 import TextField from '../../atoms/TextField';
@@ -49,55 +55,59 @@ const validateCity = (city) => {
 };
 
 const EmployeeForm = ({ title, departmentOptions, handleConfirm }) => {
-  const [modalOpen, setModalOpen] = useState(false);
   const dispatch = useDispatch();
   const formData = useSelector(state => state.employee);
-  const formError = useSelector(state => state.employee.formError);
-  const [birthDateError, setBirthDateError] = useState('');
-  const [firstNameError, setFirstNameError] = useState('');
-  const [lastNameError, setLastNameError] = useState('');
-  const [zipCodeError, setZipCodeError] = useState('');
-  const [cityError, setCityError] = useState('');
 
+  const {
+    modalOpen,
+    birthDateError,
+    firstNameError,
+    lastNameError,
+    zipCodeError,
+    cityError,
+    formError,
+  } = useSelector(state => state.employee);
+
+  
   const handleSubmit = (e) => {
     e.preventDefault();
     const { firstName, lastName, birthDate, startDate, street, city, state, zipCode, department } = formData;
-
+  
     let isValid = true;
-
+  
     if (!validateName(firstName)) {
-      setFirstNameError('First name should not contain forbidden characters or numbers');
+      dispatch(setFirstNameError('First name should not contain forbidden characters or numbers'));
       isValid = false;
     } else {
-      setFirstNameError('');
+      dispatch(setFirstNameError(''));
     }
-
+  
     if (!validateName(lastName)) {
-      setLastNameError('Last name should not contain forbidden characters or numbers');
+      dispatch(setLastNameError('Last name should not contain forbidden characters or numbers')); 
       isValid = false;
     } else {
-      setLastNameError('');
+      dispatch(setLastNameError(''));  
     }
-
+  
     if (validateAge(birthDate) < 18) {
-      setBirthDateError('The employee must be of legal age');
+      dispatch(setBirthDateError('The employee must be of legal age')); 
       isValid = false;
     } else {
-      setBirthDateError('');
+      dispatch(setBirthDateError(''));  
     }
-
-    if (!validateUSZipCode(formData.zipCode)) {
-      setZipCodeError('Invalid ZIP code');
+  
+    if (!validateUSZipCode(zipCode)) {
+      dispatch(setZipCodeError('Invalid ZIP code')); 
       isValid = false;
     } else {
-      setZipCodeError('');
+      dispatch(setZipCodeError('')); 
     }
-
-    if (!validateCity(formData.city)) {
-      setCityError('City should not contain forbidden characters or numbers');
+  
+    if (!validateCity(city)) {
+      dispatch(setCityError('City should not contain forbidden characters or numbers')); 
       isValid = false;
     } else {
-      setCityError('');
+      dispatch(setCityError(''));  
     }
 
     if (!isValid) {
@@ -105,7 +115,7 @@ const EmployeeForm = ({ title, departmentOptions, handleConfirm }) => {
     }
 
     if (firstName && lastName && birthDate && startDate && street && city && state && zipCode && department) {
-      setModalOpen(true);
+      dispatch(setModalOpen(true));  
       dispatch(setFormError(''));
     } else {
       dispatch(setFormError('All fields must be filled'));
@@ -113,7 +123,7 @@ const EmployeeForm = ({ title, departmentOptions, handleConfirm }) => {
   };
 
   const handleCancel = () => {
-    setModalOpen(false);
+    dispatch(setModalOpen(false)); 
   };
 
   const handleChange = (field) => (e) => {
@@ -180,7 +190,7 @@ const EmployeeForm = ({ title, departmentOptions, handleConfirm }) => {
       <ModalCraft isOpen={modalOpen} onClose={handleCancel}>
         <ModalContent
           data={formData}
-          onConfirm={() => { handleConfirm(); setModalOpen(false); }}
+          onConfirm={() => { handleConfirm(); dispatch(setModalOpen(false)); }}
           onCancel={handleCancel}
         />
       </ModalCraft>

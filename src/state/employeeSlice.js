@@ -18,6 +18,12 @@ const initialState = {
   isSideMenuExpanded: false,
   isModalOpen: false,
   formError: '',
+  modalOpen: false,
+  birthDateError: '',
+  firstNameError: '',
+  lastNameError: '',
+  zipCodeError: '',
+  cityError: '',
 };
 
 const employeeSlice = createSlice({
@@ -83,9 +89,48 @@ const employeeSlice = createSlice({
     setFormError: (state, action) => {
       state.formError = action.payload;
     },
+    setModalOpen: (state, action) => {
+      state.modalOpen = action.payload;
+    },
+    setBirthDateError: (state, action) => {
+      state.birthDateError = action.payload;
+    },
+    setFirstNameError: (state, action) => {
+      state.firstNameError = action.payload;
+    },
+    setLastNameError: (state, action) => {
+      state.lastNameError = action.payload;
+    },
+    setZipCodeError: (state, action) => {
+      state.zipCodeError = action.payload;
+    },
+    setCityError: (state, action) => {
+      state.cityError = action.payload;
   },
+},
 });
 
-export const { setFirstName, setLastName, setBirthDate, setStartDate, setStreet, setCity, setZipCode, setState, setDepartment, setFormError, createEmployee, toggleSideMenu, setSideMenuExpanded, loadFromLocalStorage } = employeeSlice.actions;
+export const {
+  setFirstName,
+  setLastName,
+  setBirthDate,
+  setStartDate,
+  setStreet,
+  setCity,
+  setZipCode,
+  setState,
+  setDepartment,
+  setFormError,
+  setModalOpen,  
+  setBirthDateError, 
+  setFirstNameError,  
+  setLastNameError,  
+  setZipCodeError,  
+  setCityError,  
+  toggleSideMenu,
+  setSideMenuExpanded,
+  createEmployee,
+  loadFromLocalStorage,
+} = employeeSlice.actions;
 
 export default employeeSlice.reducer;
