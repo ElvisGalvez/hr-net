@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   setFirstName,
@@ -17,6 +17,7 @@ import {
   setLastNameError,
   setZipCodeError,
   setCityError,
+
 } from '../../../state/employeeSlice';
 import DateField from '../../molecules/DateField';
 import TextField from '../../atoms/TextField';
@@ -54,9 +55,25 @@ const validateCity = (city) => {
   return !forbiddenCharacters.some(char => city.includes(char));
 };
 
-const EmployeeForm = ({ title, departmentOptions, handleConfirm }) => {
+const EmployeeForm = ({ title, onSubmit, employeeToEdit }) => {
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (employeeToEdit) {
+      dispatch(setFirstName(employeeToEdit.firstName));
+      dispatch(setLastName(employeeToEdit.lastName));
+      dispatch(setBirthDate(employeeToEdit.birthDate));
+      dispatch(setStartDate(employeeToEdit.startDate));
+      dispatch(setStreet(employeeToEdit.street));
+      dispatch(setCity(employeeToEdit.city));
+      dispatch(setZipCode(employeeToEdit.zipCode));
+      dispatch(setState(employeeToEdit.state));
+      dispatch(setDepartment(employeeToEdit.department));
+    }
+  }, [employeeToEdit, dispatch]);
+
   const formData = useSelector(state => state.employee);
+  const { departmentOptions } = useSelector(state => state.employee);
 
   const {
     modalOpen,
@@ -68,62 +85,63 @@ const EmployeeForm = ({ title, departmentOptions, handleConfirm }) => {
     formError,
   } = useSelector(state => state.employee);
 
-  
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const { firstName, lastName, birthDate, startDate, street, city, state, zipCode, department } = formData;
-  
+
+    if (!firstName || !lastName || !birthDate || !startDate || !street || !city || !state || !zipCode || !department) {
+      dispatch(setFormError('All fields must be filled'));
+      return;
+    }
+
     let isValid = true;
-  
+
+    dispatch(setFormError(''))
+
     if (!validateName(firstName)) {
       dispatch(setFirstNameError('First name should not contain forbidden characters or numbers'));
       isValid = false;
     } else {
       dispatch(setFirstNameError(''));
     }
-  
+
     if (!validateName(lastName)) {
-      dispatch(setLastNameError('Last name should not contain forbidden characters or numbers')); 
+      dispatch(setLastNameError('Last name should not contain forbidden characters or numbers'));
       isValid = false;
     } else {
-      dispatch(setLastNameError(''));  
+      dispatch(setLastNameError(''));
     }
-  
+
     if (validateAge(birthDate) < 18) {
-      dispatch(setBirthDateError('The employee must be of legal age')); 
+      dispatch(setBirthDateError('The employee must be of legal age'));
       isValid = false;
     } else {
-      dispatch(setBirthDateError(''));  
+      dispatch(setBirthDateError(''));
     }
-  
+
     if (!validateUSZipCode(zipCode)) {
-      dispatch(setZipCodeError('Invalid ZIP code')); 
+      dispatch(setZipCodeError('Invalid ZIP code'));
       isValid = false;
     } else {
-      dispatch(setZipCodeError('')); 
+      dispatch(setZipCodeError(''));
     }
-  
+
     if (!validateCity(city)) {
-      dispatch(setCityError('City should not contain forbidden characters or numbers')); 
+      dispatch(setCityError('City should not contain forbidden characters or numbers'));
       isValid = false;
     } else {
-      dispatch(setCityError(''));  
+      dispatch(setCityError(''));
     }
 
-    if (!isValid) {
-      return;
-    }
-
-    if (firstName && lastName && birthDate && startDate && street && city && state && zipCode && department) {
-      dispatch(setModalOpen(true));  
+    if (isValid) {
+      dispatch(setModalOpen(true));
       dispatch(setFormError(''));
-    } else {
-      dispatch(setFormError('All fields must be filled'));
     }
-  };
+  }
 
   const handleCancel = () => {
-    dispatch(setModalOpen(false)); 
+    dispatch(setModalOpen(false));
   };
 
   const handleChange = (field) => (e) => {
@@ -166,14 +184,15 @@ const EmployeeForm = ({ title, departmentOptions, handleConfirm }) => {
         <DateField label="Date of Birth" id="birthDate" value={formData.birthDate} onChange={handleChange('birthDate')} />
         {birthDateError && <p className="field-error">{birthDateError}</p>}
         <DateField label="Start Date" id="startDate" value={formData.startDate} onChange={handleChange('startDate')} />
-        <AddressFieldset 
-          street={formData.street} 
-          city={formData.city} 
-          state={formData.state} 
-          zipCode={formData.zipCode} 
+        <AddressFieldset
+          street={formData.street}
+          city={formData.city}
+          state={formData.state}
+          zipCode={formData.zipCode}
           onChange={handleChange}
           cityError={cityError}
           zipCodeError={zipCodeError}
+
         />
         <div className="department-select-container">
           <SelectField
@@ -190,7 +209,10 @@ const EmployeeForm = ({ title, departmentOptions, handleConfirm }) => {
       <ModalCraft isOpen={modalOpen} onClose={handleCancel}>
         <ModalContent
           data={formData}
-          onConfirm={() => { handleConfirm(); dispatch(setModalOpen(false)); }}
+          onConfirm={() => {
+            onSubmit(formData);
+            dispatch(setModalOpen(false));
+          }}
           onCancel={handleCancel}
         />
       </ModalCraft>

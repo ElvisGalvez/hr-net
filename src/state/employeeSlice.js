@@ -24,6 +24,8 @@ const initialState = {
   lastNameError: '',
   zipCodeError: '',
   cityError: '',
+  isEditModalOpen: false,
+  employeeToEdit: null,
 };
 
 const employeeSlice = createSlice({
@@ -71,18 +73,12 @@ const employeeSlice = createSlice({
     },
     createEmployee: (state, action) => {
       const newEmployee = {
-        firstName: state.firstName,
-        lastName: state.lastName,
-        birthDate: state.birthDate,
-        startDate: state.startDate,
-        street: state.street,
-        city: state.city,
-        state: state.state,
-        zipCode: state.zipCode,
-        department: state.department,
+        ...action.payload,
+        id: new Date().getTime(),
       };
       state.employees.push(newEmployee);
     },
+
     loadFromLocalStorage: (state, action) => {
       state.employees = action.payload;
     },
@@ -106,8 +102,23 @@ const employeeSlice = createSlice({
     },
     setCityError: (state, action) => {
       state.cityError = action.payload;
+    },
+    updateEmployee: (state, action) => {
+      const employeeToUpdate = action.payload;
+      const index = state.employees.findIndex(emp => emp.id === employeeToUpdate.id);
+      if (index !== -1) {
+        state.employees[index] = { ...state.employees[index], ...employeeToUpdate };
+      }
+    },
+    openEditModal: (state, action) => {
+      state.employeeToEdit = action.payload;
+      state.isEditModalOpen = true;
+    },
+    closeEditModal: (state) => {
+      state.isEditModalOpen = false;
+      state.employeeToEdit = null;
+    },
   },
-},
 });
 
 export const {
@@ -121,16 +132,19 @@ export const {
   setState,
   setDepartment,
   setFormError,
-  setModalOpen,  
-  setBirthDateError, 
-  setFirstNameError,  
-  setLastNameError,  
-  setZipCodeError,  
-  setCityError,  
+  setModalOpen,
+  setBirthDateError,
+  setFirstNameError,
+  setLastNameError,
+  setZipCodeError,
+  setCityError,
   toggleSideMenu,
   setSideMenuExpanded,
   createEmployee,
   loadFromLocalStorage,
+  updateEmployee,
+  openEditModal,
+  closeEditModal,
 } = employeeSlice.actions;
 
 export default employeeSlice.reducer;

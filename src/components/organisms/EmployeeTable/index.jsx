@@ -7,7 +7,7 @@ import {
 } from '@tanstack/react-table';
 import './EmployeeTable.css';
 
-const EmployeeTable = ({ data }) => {
+const EmployeeTable = ({ data, openEditModal }) => {
     const columnHelper = createColumnHelper();
     const columns = [
         columnHelper.accessor('firstName', {
@@ -66,7 +66,7 @@ const EmployeeTable = ({ data }) => {
     });
 
     const handleEditClick = (row) => {
-        // Ouvrir la future modale pour édition ici et passer 'row.original' pour préremplir les champs
+        openEditModal(row.original);
     };
 
     return (

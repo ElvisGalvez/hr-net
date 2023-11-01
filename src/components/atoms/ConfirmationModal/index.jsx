@@ -1,17 +1,16 @@
 import React from 'react';
 import Modal from 'modal-craft';
+import './ConfirmationModal.css';
 
 const ModalCraft = ({ isOpen, onClose, children }) => {
-  const visibilityStyle = {
-    visibility: isOpen ? 'visible' : 'hidden'
-  };
+  if (!isOpen) {
+    return null;
+  }
   
   return (
-    <div style={visibilityStyle}>
-      <Modal isOpen={isOpen} onClose={onClose}>
-        {children}
-      </Modal>
-    </div>
+    <Modal isOpen={isOpen} onClose={onClose}>
+      {children}
+    </Modal>
   );
 };
 

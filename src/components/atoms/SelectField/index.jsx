@@ -1,16 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Select from 'react-select';  
+import Select from 'react-select';
 import './SelectField.css';
 
-const SelectField = ({ label, id, options, value, onChange }) => {
+const SelectField = ({ label, id, options = [], value, onChange }) => {
   return (
     <div className="select-field-container">
       <label htmlFor={id} className="select-label">{label}</label>
       <Select
         id={id}
         options={options}
-        value={options.find(option => option.value === value)}
+        value={options ? options.find(option => option.value === value) : null}
         onChange={(option) => {
           if (option) {
             onChange(option);
