@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { createEmployee } from '../../state/employeeSlice';
+import { createEmployee, resetFormData } from '../../state/employeeSlice';
 import EmployeeForm from '../../components/organisms/EmployeeForm';
 
 const CreateEmployee = () => {
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(resetFormData());
+  }, [dispatch]);
 
   const handleConfirm = (formData) => {
     dispatch(createEmployee(formData));

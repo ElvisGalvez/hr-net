@@ -7,7 +7,7 @@ import {
 } from '@tanstack/react-table';
 import './EmployeeTable.css';
 
-const EmployeeTable = ({ data, openEditModal }) => {
+const EmployeeTable = ({ data, openEditModal, openDeleteModal }) => {
     const columnHelper = createColumnHelper();
     const columns = [
         columnHelper.accessor('firstName', {
@@ -53,9 +53,20 @@ const EmployeeTable = ({ data, openEditModal }) => {
             cell: info => info.getValue(),
         }),
         
-        columnHelper.accessor('edit', {
-            header: 'Edit',
-            cell: info => <i className="fa-solid fa-pen-to-square" onClick={() => handleEditClick(info.row)}></i>,
+        columnHelper.accessor('actions', {
+            header: 'Actions',
+            cell: info => (
+                <div>
+                    <i 
+                        className="fa-solid fa-pen-to-square" 
+                        onClick={() => handleEditClick(info.row)}
+                    ></i>
+                    <i 
+                        className="fa-solid fa-user-minus" 
+                        onClick={() => handleDeleteClick(info.row)}
+                    ></i>
+                </div>
+            ),
         }),
     ];
 
@@ -68,6 +79,10 @@ const EmployeeTable = ({ data, openEditModal }) => {
     const handleEditClick = (row) => {
         openEditModal(row.original);
     };
+
+    const handleDeleteClick = (row) => {
+        openDeleteModal(row.original);
+      };
 
     return (
         <table className="table">

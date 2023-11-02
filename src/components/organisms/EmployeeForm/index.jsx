@@ -23,9 +23,10 @@ import DateField from '../../molecules/DateField';
 import TextField from '../../atoms/TextField';
 import SelectField from '../../atoms/SelectField';
 import AddressFieldset from '../../organisms/AddressFieldset';
-import SaveButton from '../../atoms/SaveButton';
+import SaveAndCancelButton from '../../atoms/SaveAndCancelButton';
 import ModalCraft from '../../atoms/ConfirmationModal';
 import ModalContent from '../../molecules/ModalContent';
+
 import './EmployeeForm.css';
 
 const validateName = (name) => {
@@ -55,8 +56,12 @@ const validateCity = (city) => {
   return !forbiddenCharacters.some(char => city.includes(char));
 };
 
-const EmployeeForm = ({ title, onSubmit, employeeToEdit }) => {
+const EmployeeForm = ({ title, onSubmit, employeeToEdit, showCancelButton, onClose }) => {
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(setModalOpen(false));
+  }, [dispatch]);
 
   useEffect(() => {
     if (employeeToEdit) {
@@ -141,7 +146,11 @@ const EmployeeForm = ({ title, onSubmit, employeeToEdit }) => {
   }
 
   const handleCancel = () => {
-    dispatch(setModalOpen(false));
+    if (onClose) {
+      onClose();
+    } else {
+      dispatch(setModalOpen(false));
+    }
   };
 
   const handleChange = (field) => (e) => {
@@ -195,7 +204,7 @@ const EmployeeForm = ({ title, onSubmit, employeeToEdit }) => {
 
         />
         <div className="department-select-container">
-          <SelectField
+        <SelectField
             label="Department"
             id="department"
             options={departmentOptions}
@@ -203,7 +212,11 @@ const EmployeeForm = ({ title, onSubmit, employeeToEdit }) => {
             onChange={handleChange('department')}
           />
         </div>
-        <SaveButton label="Save" onClick={handleSubmit} />
+        <SaveAndCancelButton 
+          onSave={handleSubmit} 
+          onCancel={handleCancel} 
+          showCancelButton={showCancelButton}
+        />
       </form>
       {formError && <p className="form-error">{formError}</p>}
       <ModalCraft isOpen={modalOpen} onClose={handleCancel}>
@@ -219,5 +232,6 @@ const EmployeeForm = ({ title, onSubmit, employeeToEdit }) => {
     </div>
   );
 };
+
 
 export default EmployeeForm;

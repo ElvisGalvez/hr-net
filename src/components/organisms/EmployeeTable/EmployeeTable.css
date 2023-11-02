@@ -1,0 +1,10 @@
+.fa-solid.fa-pen-to-square,
+.fa-solid.fa-user-minus {
+    cursor: pointer;
+    margin-right: 18px;
+}
+
+.fa-solid.fa-pen-to-square:hover,
+.fa-solid.fa-user-minus:hover {
+color: blue;
+}

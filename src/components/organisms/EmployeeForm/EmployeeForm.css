@@ -81,4 +81,24 @@
     font-weight: 550;
   }
 
+  .button-group {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
   
+  .btn {
+    padding: 10px 20px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    color: white;
+  }
+  
+  .save {
+    background-color: #007bff;
+  }
+  
+  .cancel {
+    background-color: #f44336;
+  }

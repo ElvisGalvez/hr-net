@@ -1,7 +1,7 @@
 import React from 'react';
-import EndFormButton from '../../atoms/EndFormButton';
 import './ModalContent.css';
 import { format, parseISO, isValid } from 'date-fns';
+import SaveAndCancelButton from '../../atoms/SaveAndCancelButton';
 
 const ModalContent = ({ data, onConfirm, onCancel }) => {
 
@@ -12,6 +12,7 @@ const ModalContent = ({ data, onConfirm, onCancel }) => {
       return 'Date invalide';
     }
   };
+
   return (
     <div className="modal-content-container">
       <p><span className="modal-label">First Name:</span> <span className="modal-value">{data.firstName}</span></p>
@@ -24,8 +25,11 @@ const ModalContent = ({ data, onConfirm, onCancel }) => {
       <p><span className="modal-label">Zip Code:</span> <span className="modal-value">{data.zipCode}</span></p>
       <p><span className="modal-label">Department:</span> <span className="modal-value">{data.department}</span></p>
       <p>Are these details correct?</p>
-      <EndFormButton type="confirm" label="Confirm" onClick={onConfirm} />
-      <EndFormButton type="cancel" label="Cancel" onClick={onCancel} />
+      <SaveAndCancelButton
+        onSave={onConfirm}
+        onCancel={onCancel}
+        showCancelButton={true}
+      />
     </div>
   );
 };

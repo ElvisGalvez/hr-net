@@ -2,6 +2,9 @@ import { createSlice } from '@reduxjs/toolkit';
 import states from '../data/states.json';
 import departments from '../data/departments.json';
 
+const savedEmployees = localStorage.getItem('employees');
+const parsedEmployees = savedEmployees ? JSON.parse(savedEmployees) : [];
+
 const initialState = {
   firstName: '',
   lastName: '',
@@ -14,7 +17,7 @@ const initialState = {
   department: '',
   stateOptions: states.map(s => ({ value: s.abbreviation, label: s.name })),
   departmentOptions: departments.map(d => ({ value: d.abbreviation, label: d.name })),
-  employees: [],
+  employees: parsedEmployees,
   isSideMenuExpanded: false,
   isModalOpen: false,
   formError: '',
@@ -118,6 +121,29 @@ const employeeSlice = createSlice({
       state.isEditModalOpen = false;
       state.employeeToEdit = null;
     },
+    deleteEmployee: (state, action) => {
+      const idToDelete = action.payload.id;
+      state.employees = state.employees.filter(emp => emp.id !== idToDelete);
+    },
+    resetFormData: (state) => {
+      state.firstName = '';
+      state.lastName = '';
+      state.birthDate = null;
+      state.startDate = null;
+      state.street = '';
+      state.city = '';
+      state.zipCode = '';
+      state.state = '';
+      state.department = '';
+      state.formError = '';
+      state.modalOpen = false;
+      state.birthDateError = '';
+      state.firstNameError = '';
+      state.lastNameError = '';
+      state.zipCodeError = '';
+      state.cityError = '';
+    },
+    
   },
 });
 
@@ -145,6 +171,8 @@ export const {
   updateEmployee,
   openEditModal,
   closeEditModal,
+  deleteEmployee,
+  resetFormData
 } = employeeSlice.actions;
 
 export default employeeSlice.reducer;
