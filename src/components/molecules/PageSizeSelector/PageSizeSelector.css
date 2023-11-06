@@ -1,0 +1,14 @@
+.page-size-selector {
+    margin-right: 20px; 
+    display: flex; 
+    align-items: center; 
+}
+
+
+.page-size-selector.no-padding-bottom .select-field-container {
+    padding-bottom: 0; 
+}
+
+.custom-select__control {
+    margin: 0 10px; 
+}

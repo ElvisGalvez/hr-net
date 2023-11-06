@@ -10,14 +10,8 @@ const SelectField = ({ label, id, options = [], value, onChange }) => {
       <Select
         id={id}
         options={options}
-        value={options ? options.find(option => option.value === value) : null}
-        onChange={(option) => {
-          if (option) {
-            onChange(option);
-          } else {
-            onChange('');
-          }
-        }}
+        value={options.find(option => option.value === value)}
+        onChange={onChange}
         className="custom-select"
         classNamePrefix="custom-select"
       />
@@ -30,11 +24,11 @@ SelectField.propTypes = {
   id: PropTypes.string.isRequired,
   options: PropTypes.arrayOf(
     PropTypes.shape({
-      value: PropTypes.string,
+      value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
       label: PropTypes.string
     })
   ).isRequired,
-  value: PropTypes.string,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   onChange: PropTypes.func.isRequired
 };
 
