@@ -1,26 +1,26 @@
 import React from 'react';
 import {
-  createColumnHelper,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-  getSortedRowModel,
+    createColumnHelper,
+    flexRender,
+    getCoreRowModel,
+    useReactTable,
+    getSortedRowModel,
 } from '@tanstack/react-table';
 import './EmployeeTable.css';
 
-const EmployeeTable = ({ data, openEditModal, openDeleteModal }) => {
-  const columnHelper = createColumnHelper();
+const EmployeeTable = ({ data, pageSize, openEditModal, openDeleteModal }) => {
+    const columnHelper = createColumnHelper();
 
-  const columns = [
+    const columns = [
         columnHelper.accessor('firstName', {
             header: 'First Name',
             cell: info => info.getValue(),
-            enableSorting: true, 
+            enableSorting: true,
         }),
         columnHelper.accessor('lastName', {
             header: 'Last Name',
             cell: info => info.getValue(),
-            enableSorting: true, 
+            enableSorting: true,
         }),
 
         columnHelper.accessor('startDate', {
@@ -68,33 +68,37 @@ const EmployeeTable = ({ data, openEditModal, openDeleteModal }) => {
         columnHelper.accessor('actions', {
             header: () => <span>Actions</span>,
             cell: info => (
-              <div>
-                <i
-                  className="fa-solid fa-pen-to-square"
-                  onClick={() => handleEditClick(info.row)}
-                ></i>
-                <i
-                  className="fa-solid fa-user-minus"
-                  onClick={() => handleDeleteClick(info.row)}
-                ></i>
-              </div>
+                <div>
+                    <i
+                        className="fa-solid fa-pen-to-square"
+                        onClick={() => handleEditClick(info.row)}
+                    ></i>
+                    <i
+                        className="fa-solid fa-user-minus"
+                        onClick={() => handleDeleteClick(info.row)}
+                    ></i>
+                </div>
             ),
             enableSorting: false,
-          }),
-        ];
-      
-        const [sorting, setSorting] = React.useState([]);
+        }),
+    ];
 
-        const tableInstance = useReactTable({
-          data,
-          columns,
-          state: {
+    const [sorting, setSorting] = React.useState([]);
+
+    const slicedData = React.useMemo(() => {
+        return data.slice(0, pageSize);
+    }, [data, pageSize]);
+
+    const tableInstance = useReactTable({
+        data: slicedData,
+        columns,
+        state: {
             sorting,
-          },
-          onSortingChange: setSorting,
-          getCoreRowModel: getCoreRowModel(),
-          getSortedRowModel: getSortedRowModel(),
-        });
+        },
+        onSortingChange: setSorting,
+        getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+    });
 
     const handleEditClick = (row) => {
         openEditModal(row.original);
@@ -106,45 +110,45 @@ const EmployeeTable = ({ data, openEditModal, openDeleteModal }) => {
 
     return (
         <table className="table">
-          <thead>
-            {tableInstance.getHeaderGroups().map(headerGroup => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map(header => {
-                  const canSort = header.column.getCanSort();
-                  const isSorted = header.column.getIsSorted();
-                  return (
-                    <th key={header.id} onClick={canSort ? header.column.getToggleSortingHandler() : undefined}>
-                      {flexRender(header.column.columnDef.header, header.getContext())}
-                      {canSort && ( 
-                        isSorted ? ( 
-                          isSorted === 'desc' ? ( 
-                            <i className="fa-solid fa-caret-down sort-icon"></i>
-                          ) : ( 
-                            <i className="fa-solid fa-caret-up sort-icon"></i>
-                          )
-                        ) : ( 
-                          <i className="fa-solid fa-sort sort-icon"></i>
-                        )
-                      )}
-                    </th>
-                  );
-                })}
-              </tr>
-            ))}
-          </thead>
-          <tbody>
-        {tableInstance.getRowModel().rows.map(row => (
-          <tr key={row.id}>
-            {row.getVisibleCells().map(cell => (
-              <td key={cell.id} className="table-cell">
-                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-              </td>
-            ))}
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
+            <thead>
+                {tableInstance.getHeaderGroups().map(headerGroup => (
+                    <tr key={headerGroup.id}>
+                        {headerGroup.headers.map(header => {
+                            const canSort = header.column.getCanSort();
+                            const isSorted = header.column.getIsSorted();
+                            return (
+                                <th key={header.id} onClick={canSort ? header.column.getToggleSortingHandler() : undefined}>
+                                    {flexRender(header.column.columnDef.header, header.getContext())}
+                                    {canSort && (
+                                        isSorted ? (
+                                            isSorted === 'desc' ? (
+                                                <i className="fa-solid fa-caret-down sort-icon"></i>
+                                            ) : (
+                                                <i className="fa-solid fa-caret-up sort-icon"></i>
+                                            )
+                                        ) : (
+                                            <i className="fa-solid fa-sort sort-icon"></i>
+                                        )
+                                    )}
+                                </th>
+                            );
+                        })}
+                    </tr>
+                ))}
+            </thead>
+            <tbody>
+                {tableInstance.getRowModel().rows.map(row => (
+                    <tr key={row.id}>
+                        {row.getVisibleCells().map(cell => (
+                            <td key={cell.id} className="table-cell">
+                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                            </td>
+                        ))}
+                    </tr>
+                ))}
+            </tbody>
+        </table>
+    );
 };
 
 export default EmployeeTable;
