@@ -186,7 +186,7 @@ const EmployeeForm = ({ title, onSubmit, employeeToEdit, showCancelButton, onClo
     <div className="form-container">
       <h2 className="form-title">{title}</h2>
       <form id="employee-form" onSubmit={handleSubmit}>
-        <TextField label="First Name" id="firstName" value={formData.firstName} onChange={handleChange('firstName')} />
+      <TextField label="First Name" id="firstName" value={formData.firstName} onChange={handleChange('firstName')} />
         {firstNameError && <p className="field-error">{firstNameError}</p>}
         <TextField label="Last Name" id="lastName" value={formData.lastName} onChange={handleChange('lastName')} />
         {lastNameError && <p className="field-error">{lastNameError}</p>}

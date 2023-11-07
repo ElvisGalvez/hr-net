@@ -89,15 +89,15 @@ const EmployeeList = () => {
       />
       {isEditModalOpen && (
         <ModalCraft isOpen={isEditModalOpen} onClose={closeEditModal}>
-          <EmployeeForm
-            title="Edit Employee"
-            employee={employeeToEdit}
-            onSubmit={handleUpdateEmployee}
-            departmentOptions={departmentOptions}
-            showCancelButton={true}
-            onClose={closeEditModal}
-          />
-        </ModalCraft>
+  <EmployeeForm
+    title="Edit Employee"
+    employeeToEdit={employeeToEdit} 
+    onSubmit={handleUpdateEmployee}
+    departmentOptions={departmentOptions}
+    showCancelButton={true}
+    onClose={closeEditModal}
+  />
+</ModalCraft>
       )}
       {isDeleteModalOpen && (
         <ModalCraft isOpen={isDeleteModalOpen} onClose={closeDeleteModal}>
