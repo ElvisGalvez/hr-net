@@ -1,14 +1,18 @@
 import React from 'react';
 import {
-    createColumnHelper,
-    flexRender,
-    getCoreRowModel,
-    useReactTable,
-    getSortedRowModel,
+  createColumnHelper,
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+  getSortedRowModel,
 } from '@tanstack/react-table';
 import './EmployeeTable.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { setSorting } from '../../../state/employeeSlice';
 
 const EmployeeTable = ({ data, pageSize, openEditModal, openDeleteModal }) => {
+    const dispatch = useDispatch();
+    const sorting = useSelector((state) => state.employee.sorting);
     const columnHelper = createColumnHelper();
 
     const columns = [
@@ -83,22 +87,33 @@ const EmployeeTable = ({ data, pageSize, openEditModal, openDeleteModal }) => {
         }),
     ];
 
-    const [sorting, setSorting] = React.useState([]);
-
     const slicedData = React.useMemo(() => {
         return data.slice(0, pageSize);
-    }, [data, pageSize]);
-
-    const tableInstance = useReactTable({
+      }, [data, pageSize]);
+    
+      const setSortingHandler = (updater) => {
+        if (typeof updater === 'function') {
+          const newSorting = updater(sorting);
+          dispatch(setSorting(newSorting.map(sort => ({
+            id: sort.id,
+            desc: sort.desc
+          }))));
+        } else {
+          console.error('Expected updater to be a function, but received:', updater);
+        }
+      };
+      
+    
+      const tableInstance = useReactTable({
         data: slicedData,
         columns,
         state: {
-            sorting,
+          sorting, 
         },
-        onSortingChange: setSorting,
+        onSortingChange: setSortingHandler,
         getCoreRowModel: getCoreRowModel(),
         getSortedRowModel: getSortedRowModel(),
-    });
+      });
 
     const handleEditClick = (row) => {
         openEditModal(row.original);

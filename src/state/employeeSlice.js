@@ -34,6 +34,7 @@ const initialState = {
   pageSize: 10,
   searchValue: '',
   filteredEmployees: [],
+  sorting: [],
 };
 
 const employeeSlice = createSlice({
@@ -158,6 +159,9 @@ const employeeSlice = createSlice({
     setFilteredEmployees: (state, action) => {
       state.filteredEmployees = action.payload;
     },
+    setSorting: (state, action) => {
+      state.sorting = action.payload;
+    },
     resetFormData: (state) => {
       state.firstName = '';
       state.lastName = '';
@@ -221,6 +225,7 @@ export const {
   setPageSize,
   setSearchValue,
   setFilteredEmployees,
+  setSorting,
 } = employeeSlice.actions;
 
 export default employeeSlice.reducer;

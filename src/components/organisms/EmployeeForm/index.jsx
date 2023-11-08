@@ -17,7 +17,6 @@ import {
   setLastNameError,
   setZipCodeError,
   setCityError,
-
 } from '../../../state/employeeSlice';
 import DateField from '../../molecules/DateField';
 import TextField from '../../atoms/TextField';
