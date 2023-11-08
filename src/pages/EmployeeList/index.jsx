@@ -21,6 +21,7 @@ const EmployeeList = () => {
     const [employeeToDelete, setEmployeeToDelete] = useState(null);
     const [pageSize, setPageSize] = useState(10);
     const [searchValue, setSearchValue] = useState('');
+    const [filteredEmployees, setFilteredEmployees] = useState(employees);
 
     useEffect(() => {
         const storedData = localStorage.getItem('employees');
@@ -40,6 +41,21 @@ const EmployeeList = () => {
             window.removeEventListener('storage', handleStorageChange);
         };
     }, [dispatch]);
+
+    useEffect(() => {
+        if (searchValue) {
+            setFilteredEmployees(
+                employees.filter((employee) =>
+                    Object.values(employee)
+                        .join(" ")
+                        .toLowerCase()
+                        .includes(searchValue.toLowerCase())
+                )
+            );
+        } else {
+            setFilteredEmployees(employees);
+        }
+    }, [searchValue, employees]);
 
     const openEditModal = (employee) => {
         setEmployeeToEdit(employee);
@@ -71,8 +87,6 @@ const EmployeeList = () => {
         closeDeleteModal();
     };
 
-    // Ici, la future logique de search
-
     return (
         <div className="container">
             <OptionsBar
@@ -82,7 +96,7 @@ const EmployeeList = () => {
                 setSearchValue={setSearchValue}
             />
             <EmployeeTable
-                data={employees}
+                data={filteredEmployees.slice(0, pageSize)}
                 pageSize={pageSize}
                 openEditModal={openEditModal}
                 openDeleteModal={openDeleteModal}
