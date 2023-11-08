@@ -29,6 +29,11 @@ const initialState = {
   cityError: '',
   isEditModalOpen: false,
   employeeToEdit: null,
+  isDeleteModalOpen: false,
+  employeeToDelete: null,
+  pageSize: 10,
+  searchValue: '',
+  filteredEmployees: [],
 };
 
 const employeeSlice = createSlice({
@@ -116,14 +121,42 @@ const employeeSlice = createSlice({
     openEditModal: (state, action) => {
       state.employeeToEdit = action.payload;
       state.isEditModalOpen = true;
-    },
-    closeEditModal: (state) => {
+  },
+  closeEditModal: (state) => {
       state.isEditModalOpen = false;
       state.employeeToEdit = null;
+  },
+  deleteEmployee: (state, action) => {
+    const idToDelete = action.payload.id;
+    state.employees = state.employees.filter(emp => emp.id !== idToDelete);
+    state.filteredEmployees = state.filteredEmployees.filter(emp => emp.id !== idToDelete);
+  },
+    openDeleteModal: (state, action) => {
+      state.employeeToDelete = action.payload;
+      state.isDeleteModalOpen = true;
     },
-    deleteEmployee: (state, action) => {
-      const idToDelete = action.payload.id;
-      state.employees = state.employees.filter(emp => emp.id !== idToDelete);
+    closeDeleteModal: (state) => {
+      state.isDeleteModalOpen = false;
+      state.employeeToDelete = null;
+    },
+    setPageSize: (state, action) => {
+      state.pageSize = action.payload;
+    },
+    setSearchValue: (state, action) => {
+      state.searchValue = action.payload;
+      state.filteredEmployees = action.payload
+        ? state.employees.filter(employee =>
+            [employee.firstName, employee.lastName]
+              .filter(Boolean) 
+              .join(" ") 
+              .toLowerCase() 
+              .includes(action.payload.toLowerCase()) 
+          )
+        : state.employees; 
+    },
+    
+    setFilteredEmployees: (state, action) => {
+      state.filteredEmployees = action.payload;
     },
     resetFormData: (state) => {
       state.firstName = '';
@@ -143,9 +176,19 @@ const employeeSlice = createSlice({
       state.zipCodeError = '';
       state.cityError = '';
     },
-    
-  },
-});
+    },
+    extraReducers: (builder) => {
+      builder
+        .addCase(loadFromLocalStorage, (state, action) => {
+          state.employees = action.payload;
+          state.filteredEmployees = !state.searchValue
+            ? action.payload
+            : action.payload.filter(employee =>
+                Object.values(employee).join(" ").toLowerCase().includes(state.searchValue.toLowerCase())
+              );
+        });
+    }    
+  });
 
 export const {
   setFirstName,
@@ -172,7 +215,12 @@ export const {
   openEditModal,
   closeEditModal,
   deleteEmployee,
-  resetFormData
+  resetFormData,
+  openDeleteModal,
+  closeDeleteModal,
+  setPageSize,
+  setSearchValue,
+  setFilteredEmployees,
 } = employeeSlice.actions;
 
 export default employeeSlice.reducer;

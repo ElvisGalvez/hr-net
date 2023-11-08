@@ -1,9 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-    loadFromLocalStorage,
-    updateEmployee,
-    deleteEmployee
+  loadFromLocalStorage,
+  updateEmployee,
+  deleteEmployee,
+  openEditModal,
+  closeEditModal,
+  openDeleteModal,
+  closeDeleteModal,
+  setPageSize,
+  setSearchValue
 } from '../../state/employeeSlice';
 import EmployeeTable from '../../components/organisms/EmployeeTable';
 import EmployeeForm from '../../components/organisms/EmployeeForm';
@@ -13,122 +19,93 @@ import OptionsBar from '../../components/organisms/OptionBar';
 import './EmployeeList.css';
 
 const EmployeeList = () => {
-    const dispatch = useDispatch();
-    const { employees, departmentOptions } = useSelector((state) => state.employee);
-    const [isEditModalOpen, setEditModalOpen] = useState(false);
-    const [employeeToEdit, setEmployeeToEdit] = useState(null);
-    const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
-    const [employeeToDelete, setEmployeeToDelete] = useState(null);
-    const [pageSize, setPageSize] = useState(10);
-    const [searchValue, setSearchValue] = useState('');
-    const [filteredEmployees, setFilteredEmployees] = useState(employees);
+  const dispatch = useDispatch();
+  const {
+    departmentOptions,
+    isEditModalOpen,
+    employeeToEdit,
+    isDeleteModalOpen,
+    employeeToDelete,
+    pageSize,
+    searchValue,
+    filteredEmployees
+  } = useSelector((state) => state.employee);
 
-    useEffect(() => {
-        const storedData = localStorage.getItem('employees');
-        if (storedData) {
-            dispatch(loadFromLocalStorage(JSON.parse(storedData)));
-        }
-
-        const handleStorageChange = (e) => {
-            if (e.key === 'employees') {
-                dispatch(loadFromLocalStorage(JSON.parse(e.newValue)));
-            }
-        };
-
-        window.addEventListener('storage', handleStorageChange);
-
-        return () => {
-            window.removeEventListener('storage', handleStorageChange);
-        };
-    }, [dispatch]);
-
-    useEffect(() => {
-        if (searchValue) {
-            setFilteredEmployees(
-                employees.filter((employee) =>
-                    Object.values(employee)
-                        .join(" ")
-                        .toLowerCase()
-                        .includes(searchValue.toLowerCase())
-                )
-            );
-        } else {
-            setFilteredEmployees(employees);
-        }
-    }, [searchValue, employees]);
-
-    const openEditModal = (employee) => {
-        setEmployeeToEdit(employee);
-        setEditModalOpen(true);
+  useEffect(() => {
+    const storedData = localStorage.getItem('employees');
+    if (storedData) {
+      dispatch(loadFromLocalStorage(JSON.parse(storedData)));
+    }
+    
+    const handleStorageChange = (e) => {
+      if (e.key === 'employees') {
+        dispatch(loadFromLocalStorage(JSON.parse(e.newValue)));
+      }
     };
+    
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, [dispatch]);
 
-    const closeEditModal = () => {
-        setEditModalOpen(false);
-        setEmployeeToEdit(null);
-    };
+  useEffect(() => {
+    dispatch(setSearchValue(''));
+  }, [dispatch]);
 
-    const handleUpdateEmployee = (updatedEmployee) => {
-        dispatch(updateEmployee({ ...updatedEmployee, id: employeeToEdit.id }));
-        closeEditModal();
-    };
+  const handleOpenEditModal = (employee) => dispatch(openEditModal(employee));
+  const handleCloseEditModal = () => dispatch(closeEditModal());
+  const handleUpdateEmployee = (updatedEmployee) => {
+    dispatch(updateEmployee({ ...updatedEmployee, id: employeeToEdit.id }));
+    handleCloseEditModal();
+  };
+  const handleOpenDeleteModal = (employee) => dispatch(openDeleteModal(employee));
+  const handleCloseDeleteModal = () => dispatch(closeDeleteModal());
+  const handleDeleteEmployee = () => {
+    dispatch(deleteEmployee({ id: employeeToDelete.id }));
+    handleCloseDeleteModal();
+  };
 
-    const openDeleteModal = (employee) => {
-        setEmployeeToDelete(employee);
-        setDeleteModalOpen(true);
-    };
-
-    const closeDeleteModal = () => {
-        setDeleteModalOpen(false);
-        setEmployeeToDelete(null);
-    };
-
-    const handleDeleteEmployee = () => {
-        dispatch(deleteEmployee({ id: employeeToDelete.id }));
-        closeDeleteModal();
-    };
-
-    return (
-        <div className="container">
-            <OptionsBar
-                pageSize={pageSize}
-                setPageSize={setPageSize}
-                searchValue={searchValue}
-                setSearchValue={setSearchValue}
+  return (
+    <div className="container">
+      <OptionsBar
+        pageSize={pageSize}
+        setPageSize={(size) => dispatch(setPageSize(size))}
+        searchValue={searchValue}
+        setSearchValue={(value) => dispatch(setSearchValue(value))}
+      />
+      <EmployeeTable
+        data={filteredEmployees}
+        pageSize={pageSize}
+        openEditModal={handleOpenEditModal}
+        openDeleteModal={handleOpenDeleteModal}
+      />
+      {isEditModalOpen && (
+        <ModalCraft isOpen={isEditModalOpen} onClose={handleCloseEditModal}>
+          <EmployeeForm
+            title="Edit Employee"
+            employeeToEdit={employeeToEdit}
+            onSubmit={handleUpdateEmployee}
+            departmentOptions={departmentOptions}
+            showCancelButton={true}
+            onClose={handleCloseEditModal}
+          />
+        </ModalCraft>
+      )}
+      {isDeleteModalOpen && (
+        <ModalCraft isOpen={isDeleteModalOpen} onClose={handleCloseDeleteModal}>
+          <div>
+            <p>Are you sure you want to delete this employee?</p>
+            <SaveAndCancelButton
+              onSave={handleDeleteEmployee}
+              onCancel={handleCloseDeleteModal}
+              saveLabel="Confirm"
+              cancelLabel="Cancel"
+              showCancelButton={true}
             />
-            <EmployeeTable
-                data={filteredEmployees.slice(0, pageSize)}
-                pageSize={pageSize}
-                openEditModal={openEditModal}
-                openDeleteModal={openDeleteModal}
-            />
-            {isEditModalOpen && (
-                <ModalCraft isOpen={isEditModalOpen} onClose={closeEditModal}>
-                    <EmployeeForm
-                        title="Edit Employee"
-                        employeeToEdit={employeeToEdit}
-                        onSubmit={handleUpdateEmployee}
-                        departmentOptions={departmentOptions}
-                        showCancelButton={true}
-                        onClose={closeEditModal}
-                    />
-                </ModalCraft>
-            )}
-            {isDeleteModalOpen && (
-                <ModalCraft isOpen={isDeleteModalOpen} onClose={closeDeleteModal}>
-                    <div>
-                        <p>Are you sure you want to delete this employee?</p>
-                        <SaveAndCancelButton
-                            onSave={handleDeleteEmployee}
-                            onCancel={closeDeleteModal}
-                            saveLabel="Confirm"
-                            cancelLabel="Cancel"
-                            showCancelButton={true}
-                        />
-                    </div>
-                </ModalCraft>
-            )}
-        </div>
-    );
+          </div>
+        </ModalCraft>
+      )}
+    </div>
+  );
 };
 
 export default EmployeeList;
