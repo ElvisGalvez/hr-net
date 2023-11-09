@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Logo renders correctly when collapsed 1`] = `
+<div
+  className="logo-container"
+>
+  <img
+    alt="Wealth Health Logo"
+    className="logo collapsed"
+    src="wealth health logo.jpg"
+  />
+</div>
+`;
+
+exports[`Logo renders correctly when expanded 1`] = `
+<div
+  className="logo-container"
+>
+  <img
+    alt="Wealth Health Logo"
+    className="logo expanded"
+    src="wealth health logo.jpg"
+  />
+</div>
+`;

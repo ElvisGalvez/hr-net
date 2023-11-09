@@ -24,7 +24,7 @@ import SelectField from '../../atoms/SelectField';
 import AddressFieldset from '../../organisms/AddressFieldset';
 import SaveAndCancelButton from '../../atoms/SaveAndCancelButton';
 import ModalCraft from '../../atoms/ConfirmationModal';
-import ModalContent from '../../molecules/ModalContent';
+import ModalContent from '../../molecules/ModalContent'; 
 
 import './EmployeeForm.css';
 
@@ -94,15 +94,17 @@ const EmployeeForm = ({ title, onSubmit, employeeToEdit, showCancelButton, onClo
     e.preventDefault();
     const { firstName, lastName, birthDate, startDate, street, city, state, zipCode, department } = formData;
 
+    let isValid = true;
+    let hasEmptyFields = false;
+
     if (!firstName || !lastName || !birthDate || !startDate || !street || !city || !state || !zipCode || !department) {
       dispatch(setFormError('All fields must be filled'));
-      return;
+      hasEmptyFields = true;
+    } else {
+      dispatch(setFormError(''));
     }
 
-    let isValid = true;
-
-    dispatch(setFormError(''))
-
+    // Validation du prénom
     if (!validateName(firstName)) {
       dispatch(setFirstNameError('First name should not contain forbidden characters or numbers'));
       isValid = false;
@@ -138,9 +140,8 @@ const EmployeeForm = ({ title, onSubmit, employeeToEdit, showCancelButton, onClo
       dispatch(setCityError(''));
     }
 
-    if (isValid) {
+    if (isValid && !hasEmptyFields) {
       dispatch(setModalOpen(true));
-      dispatch(setFormError(''));
     }
   }
 

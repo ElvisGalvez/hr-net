@@ -35,6 +35,9 @@ const initialState = {
   searchValue: '',
   filteredEmployees: [],
   sorting: [],
+  confirmation: true,
+  autoClose: false,
+  modalType: 'create',
 };
 
 const employeeSlice = createSlice({
@@ -117,8 +120,15 @@ const employeeSlice = createSlice({
       const index = state.employees.findIndex(emp => emp.id === employeeToUpdate.id);
       if (index !== -1) {
         state.employees[index] = { ...state.employees[index], ...employeeToUpdate };
+        const filteredIndex = state.filteredEmployees.findIndex(emp => emp.id === employeeToUpdate.id);
+        if (filteredIndex !== -1) {
+          state.filteredEmployees[filteredIndex] = { ...state.filteredEmployees[filteredIndex], ...employeeToUpdate };
+        }
+      } else {
+        console.error('Employee not found for update:', employeeToUpdate.id);
       }
     },
+    
     openEditModal: (state, action) => {
       state.employeeToEdit = action.payload;
       state.isEditModalOpen = true;
@@ -162,6 +172,16 @@ const employeeSlice = createSlice({
     setSorting: (state, action) => {
       state.sorting = action.payload;
     },
+    setConfirmation: (state, action) => {
+      state.confirmation = action.payload;
+    },
+
+    setAutoClose: (state, action) => {
+      state.autoClose = action.payload;
+    },
+    setModalType: (state, action) => {
+      state.modalType = action.payload;
+    },
     resetFormData: (state) => {
       state.firstName = '';
       state.lastName = '';
@@ -179,6 +199,8 @@ const employeeSlice = createSlice({
       state.lastNameError = '';
       state.zipCodeError = '';
       state.cityError = '';
+      state.confirmation = true;
+      state.autoClose = false;
     },
     },
     extraReducers: (builder) => {
@@ -226,6 +248,9 @@ export const {
   setSearchValue,
   setFilteredEmployees,
   setSorting,
+  setConfirmation,
+  setAutoClose,
+  setModalType,
 } = employeeSlice.actions;
 
 export default employeeSlice.reducer;

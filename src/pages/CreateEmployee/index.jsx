@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { createEmployee, resetFormData } from '../../state/employeeSlice';
+import { createEmployee, resetFormData, setModalType } from '../../state/employeeSlice';
 import EmployeeForm from '../../components/organisms/EmployeeForm';
 
 const CreateEmployee = () => {
@@ -8,6 +8,7 @@ const CreateEmployee = () => {
 
   useEffect(() => {
     dispatch(resetFormData());
+    dispatch(setModalType('create')); 
   }, [dispatch]);
 
   const handleConfirm = (formData) => {

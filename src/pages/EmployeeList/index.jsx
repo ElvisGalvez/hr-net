@@ -9,7 +9,8 @@ import {
   openDeleteModal,
   closeDeleteModal,
   setPageSize,
-  setSearchValue
+  setSearchValue,
+  setModalType
 } from '../../state/employeeSlice';
 import EmployeeTable from '../../components/organisms/EmployeeTable';
 import EmployeeForm from '../../components/organisms/EmployeeForm';
@@ -51,7 +52,10 @@ const EmployeeList = () => {
     dispatch(setSearchValue(''));
   }, [dispatch]);
 
-  const handleOpenEditModal = (employee) => dispatch(openEditModal(employee));
+  const handleOpenEditModal = (employee) => {
+    dispatch(setModalType('edit'));
+    dispatch(openEditModal(employee));
+  };
   const handleCloseEditModal = () => dispatch(closeEditModal());
   const handleUpdateEmployee = (updatedEmployee) => {
     dispatch(updateEmployee({ ...updatedEmployee, id: employeeToEdit.id }));
