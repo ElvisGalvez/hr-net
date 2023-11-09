@@ -12,12 +12,13 @@ const AddressFieldset = ({ street, city, state, zipCode, onChange, cityError, zi
     <TextField label="City" id="city" value={city} onChange={onChange('city')} />
     {cityError && <p className="field-error">{cityError}</p>}
     <SelectField
-      label="State"
-      id="state"
-      options={states.map((s) => ({ value: s.abbreviation, label: s.name }))}
-      value={state}
-      onChange={(selectedOption) => onChange('state')(selectedOption ? selectedOption.value : null)}
-    />
+  key={state || 'state-default'}
+  label="State"
+  id="state"
+  options={states.map((s) => ({ value: s.abbreviation, label: s.name }))}
+  value={state}
+  onChange={(selectedOption) => onChange('state')(selectedOption ? selectedOption.value : null)}
+/>
     <TextField label="Zip Code" id="zipCode" value={zipCode} onChange={onChange('zipCode')} />
     {zipCodeError && <p className="field-error">{zipCodeError}</p>}
   </fieldset>

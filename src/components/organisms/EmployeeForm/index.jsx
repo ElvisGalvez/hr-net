@@ -17,6 +17,7 @@ import {
   setLastNameError,
   setZipCodeError,
   setCityError,
+  resetFormData
 } from '../../../state/employeeSlice';
 import DateField from '../../molecules/DateField';
 import TextField from '../../atoms/TextField';
@@ -24,7 +25,7 @@ import SelectField from '../../atoms/SelectField';
 import AddressFieldset from '../../organisms/AddressFieldset';
 import SaveAndCancelButton from '../../atoms/SaveAndCancelButton';
 import ModalCraft from '../../atoms/ConfirmationModal';
-import ModalContent from '../../molecules/ModalContent'; 
+import ModalContent from '../../molecules/ModalContent';
 
 import './EmployeeForm.css';
 
@@ -104,7 +105,6 @@ const EmployeeForm = ({ title, onSubmit, employeeToEdit, showCancelButton, onClo
       dispatch(setFormError(''));
     }
 
-    // Validation du prénom
     if (!validateName(firstName)) {
       dispatch(setFirstNameError('First name should not contain forbidden characters or numbers'));
       isValid = false;
@@ -182,11 +182,17 @@ const EmployeeForm = ({ title, onSubmit, employeeToEdit, showCancelButton, onClo
     }
   };
 
+  const handleConfirm = () => {
+    onSubmit(formData);
+    dispatch(resetFormData());
+    dispatch(setModalOpen(false));
+  };
+
   return (
     <div className="form-container">
       <h2 className="form-title">{title}</h2>
       <form id="employee-form" onSubmit={handleSubmit}>
-      <TextField label="First Name" id="firstName" value={formData.firstName} onChange={handleChange('firstName')} />
+        <TextField label="First Name" id="firstName" value={formData.firstName} onChange={handleChange('firstName')} />
         {firstNameError && <p className="field-error">{firstNameError}</p>}
         <TextField label="Last Name" id="lastName" value={formData.lastName} onChange={handleChange('lastName')} />
         {lastNameError && <p className="field-error">{lastNameError}</p>}
@@ -204,7 +210,8 @@ const EmployeeForm = ({ title, onSubmit, employeeToEdit, showCancelButton, onClo
 
         />
         <div className="department-select-container">
-        <SelectField
+          <SelectField
+            key={formData.department || 'department-default'}
             label="Department"
             id="department"
             options={departmentOptions}
@@ -212,9 +219,9 @@ const EmployeeForm = ({ title, onSubmit, employeeToEdit, showCancelButton, onClo
             onChange={handleChange('department')}
           />
         </div>
-        <SaveAndCancelButton 
-          onSave={handleSubmit} 
-          onCancel={handleCancel} 
+        <SaveAndCancelButton
+          onSave={handleSubmit}
+          onCancel={handleCancel}
           showCancelButton={showCancelButton}
         />
       </form>
@@ -222,10 +229,7 @@ const EmployeeForm = ({ title, onSubmit, employeeToEdit, showCancelButton, onClo
       <ModalCraft isOpen={modalOpen} onClose={handleCancel}>
         <ModalContent
           data={formData}
-          onConfirm={() => {
-            onSubmit(formData);
-            dispatch(setModalOpen(false));
-          }}
+          onConfirm={handleConfirm}
           onCancel={handleCancel}
         />
       </ModalCraft>
