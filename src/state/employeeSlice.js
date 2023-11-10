@@ -85,8 +85,16 @@ const employeeSlice = createSlice({
     },
     createEmployee: (state, action) => {
       const newEmployee = {
-        ...action.payload,
         id: new Date().getTime(),
+        firstName: action.payload.firstName,
+        lastName: action.payload.lastName,
+        birthDate: action.payload.birthDate,
+        startDate: action.payload.startDate,
+        street: action.payload.street,
+        city: action.payload.city,
+        state: action.payload.state,
+        zipCode: action.payload.zipCode,
+        department: action.payload.department
       };
       state.employees.push(newEmployee);
     },
@@ -119,10 +127,16 @@ const employeeSlice = createSlice({
       const employeeToUpdate = action.payload;
       const index = state.employees.findIndex(emp => emp.id === employeeToUpdate.id);
       if (index !== -1) {
-        state.employees[index] = { ...state.employees[index], ...employeeToUpdate };
+        state.employees[index] = {
+          ...state.employees[index],
+          ...employeeToUpdate,
+        };
         const filteredIndex = state.filteredEmployees.findIndex(emp => emp.id === employeeToUpdate.id);
         if (filteredIndex !== -1) {
-          state.filteredEmployees[filteredIndex] = { ...state.filteredEmployees[filteredIndex], ...employeeToUpdate };
+          state.filteredEmployees[filteredIndex] = {
+            ...state.filteredEmployees[filteredIndex],
+            ...employeeToUpdate,
+          };
         }
       } else {
         console.error('Employee not found for update:', employeeToUpdate.id);

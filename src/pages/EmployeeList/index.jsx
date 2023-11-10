@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   loadFromLocalStorage,
@@ -37,13 +37,13 @@ const EmployeeList = () => {
     if (storedData) {
       dispatch(loadFromLocalStorage(JSON.parse(storedData)));
     }
-    
+
     const handleStorageChange = (e) => {
       if (e.key === 'employees') {
         dispatch(loadFromLocalStorage(JSON.parse(e.newValue)));
       }
     };
-    
+
     window.addEventListener('storage', handleStorageChange);
     return () => window.removeEventListener('storage', handleStorageChange);
   }, [dispatch]);
@@ -68,6 +68,8 @@ const EmployeeList = () => {
     handleCloseDeleteModal();
   };
 
+  const [pageIndex, setPageIndex] = useState(0); 
+
   return (
     <div className="container">
       <OptionsBar
@@ -79,6 +81,8 @@ const EmployeeList = () => {
       <EmployeeTable
         data={filteredEmployees}
         pageSize={pageSize}
+        pageIndex={pageIndex}
+        setPageIndex={setPageIndex} 
         openEditModal={handleOpenEditModal}
         openDeleteModal={handleOpenDeleteModal}
       />
