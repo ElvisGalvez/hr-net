@@ -1,3 +1,50 @@
+[![Made with React](https://img.shields.io/badge/Made%20with-React-1f425f.svg)](https://reactjs.org/)
+
+# WealthHealth HRnet Application
+
+![Screenshot of HrNet EmployeeList](./src/assets/screenshots/HrnetScreenshot.png)
+
+## About
+
+WealthHealth is a company utilizing an internal web application called **HRnet**, which manages employee records. The application, originally developed using jQuery, has recently been upgraded and rebuilt using React to enhance performance, reduce bugs, and address internal complaints.
+This project was undertaken as part of an OpenClassrooms training program.
+
+### Modernization with React
+
+The redevelopment of the HRnet application into React has brought significant improvements in user experience and code maintainability. This modernization helps WealthHealth stay current with modern technologies and improves the efficiency of employee management.
+
+## Modal-Craft Library
+
+A key part of this overhaul was the integration of my custom library [`modal-craft`](https://github.com/ElvisGalvez/Modal-craft). `Modal-Craft` is a React modal component library that offers flexibility and customization.
+
+### Features of Modal-Craft
+
+-   **Customizable**: Adapt the appearance and behavior of modals to meet the specific needs of the HRnet application.
+-   **React Friendly**: Designed to integrate seamlessly into modern React applications.
+-   **Easy to Use**: Simple and intuitive interface for integrating and using modals in applications.
+
+## Getting Started
+
+To use the HRnet application or integrate `Modal-Craft` into your project:
+
+1.  Clone the repository:
+   
+ `git clone https://github.com/ElvisGalvez/hr-net.git` 
+    
+2.  Install dependencies:
+    
+     `npm install` 
+    
+3.  Start the application:
+    
+    `npm start` 
+    
+
+To use `Modal-Craft` in your own React project, install the library via npm:
+
+`npm install modal-craft`
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

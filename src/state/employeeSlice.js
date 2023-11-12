@@ -142,20 +142,20 @@ const employeeSlice = createSlice({
         console.error('Employee not found for update:', employeeToUpdate.id);
       }
     },
-    
+
     openEditModal: (state, action) => {
       state.employeeToEdit = action.payload;
       state.isEditModalOpen = true;
-  },
-  closeEditModal: (state) => {
+    },
+    closeEditModal: (state) => {
       state.isEditModalOpen = false;
       state.employeeToEdit = null;
-  },
-  deleteEmployee: (state, action) => {
-    const idToDelete = action.payload.id;
-    state.employees = state.employees.filter(emp => emp.id !== idToDelete);
-    state.filteredEmployees = state.filteredEmployees.filter(emp => emp.id !== idToDelete);
-  },
+    },
+    deleteEmployee: (state, action) => {
+      const idToDelete = action.payload.id;
+      state.employees = state.employees.filter(emp => emp.id !== idToDelete);
+      state.filteredEmployees = state.filteredEmployees.filter(emp => emp.id !== idToDelete);
+    },
     openDeleteModal: (state, action) => {
       state.employeeToDelete = action.payload;
       state.isDeleteModalOpen = true;
@@ -171,15 +171,15 @@ const employeeSlice = createSlice({
       state.searchValue = action.payload;
       state.filteredEmployees = action.payload
         ? state.employees.filter(employee =>
-            [employee.firstName, employee.lastName]
-              .filter(Boolean) 
-              .join(" ") 
-              .toLowerCase() 
-              .includes(action.payload.toLowerCase()) 
-          )
-        : state.employees; 
+          [employee.firstName, employee.lastName]
+            .filter(Boolean)
+            .join(" ")
+            .toLowerCase()
+            .includes(action.payload.toLowerCase())
+        )
+        : state.employees;
     },
-    
+
     setFilteredEmployees: (state, action) => {
       state.filteredEmployees = action.payload;
     },
@@ -216,19 +216,19 @@ const employeeSlice = createSlice({
       state.confirmation = true;
       state.autoClose = false;
     },
-    },
-    extraReducers: (builder) => {
-      builder
-        .addCase(loadFromLocalStorage, (state, action) => {
-          state.employees = action.payload;
-          state.filteredEmployees = !state.searchValue
-            ? action.payload
-            : action.payload.filter(employee =>
-                Object.values(employee).join(" ").toLowerCase().includes(state.searchValue.toLowerCase())
-              );
-        });
-    }    
-  });
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(loadFromLocalStorage, (state, action) => {
+        state.employees = action.payload;
+        state.filteredEmployees = !state.searchValue
+          ? action.payload
+          : action.payload.filter(employee =>
+            Object.values(employee).join(" ").toLowerCase().includes(state.searchValue.toLowerCase())
+          );
+      });
+  }
+});
 
 export const {
   setFirstName,
