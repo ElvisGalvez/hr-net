@@ -84,21 +84,23 @@ const employeeSlice = createSlice({
       state.isModalOpen = false;
     },
     createEmployee: (state, action) => {
+      const { firstName, lastName, birthDate, startDate, street, city, state: employeeState, zipCode, department } = action.payload;
+      const id = `${lastName.substring(0, 3)}-${new Date().getTime()}`;
       const newEmployee = {
-        id: new Date().getTime(),
-        firstName: action.payload.firstName,
-        lastName: action.payload.lastName,
-        birthDate: action.payload.birthDate,
-        startDate: action.payload.startDate,
-        street: action.payload.street,
-        city: action.payload.city,
-        state: action.payload.state,
-        zipCode: action.payload.zipCode,
-        department: action.payload.department
+        id,
+        firstName,
+        lastName,
+        birthDate,
+        startDate,
+        street,
+        city,
+        state: employeeState,
+        zipCode,
+        department
       };
       state.employees.push(newEmployee);
     },
-
+    
     loadFromLocalStorage: (state, action) => {
       state.employees = action.payload;
     },
